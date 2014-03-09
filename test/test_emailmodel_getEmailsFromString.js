@@ -1,6 +1,6 @@
 var
   EmailModel = require('../lib/emailmodel').EmailModel,
-  emailmodel = new EmailModel(),
+  emailModel = new EmailModel(),
   assert = require('assert'),
   inspect = require('util').inspect;
 
@@ -17,7 +17,7 @@ var
     var result;
 
     try {
-      result = emailmodel._getEmailsFromString(v.source);
+      result = emailModel._getEmailsFromString(v.source);
     } catch (e) {
       console.log(makeMsg(v.what, 'JS Exception: ' + e.stack));
       return;

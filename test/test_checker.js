@@ -2,14 +2,20 @@ var
   Checker = require('../lib/checker').Checker,
   EmailModel = require('../lib/EmailModel').EmailModel,
   testEmailModel,
-  assert = require('assert');
+  assert = require('assert'),
+  FROM_ADDRESS = 'you@domain.com',
+  TO_ADDRESS = 'me@here.com',
+  CC_ADDRESS = 'cc@winans.com',
+  SUBJECT = 'abc';
 
 var testCases = [];
 testEmailModel = new EmailModel();
 testEmailModel.setHeader(
   {
-    'subject': ['abc'],
-    'from': ['me <me@domain.com>']
+    'subject': [SUBJECT],
+    'from': ['you <' + FROM_ADDRESS + '>'],
+    'to': ['me <' + TO_ADDRESS + '>', 'Just Another <email@address.com'],
+    'cc': ['CC <' + CC_ADDRESS + '>']
   });
 
 testCases.push({
@@ -25,7 +31,7 @@ testCases.push({
   description: 'Subject starts with, match',
   emailModel: testEmailModel,
   rules: [function(emailModel) {
-    return emailModel.getSubject().indexOf('abc') === 0;
+    return emailModel.getSubject().indexOf(SUBJECT) === 0;
   }],
   expected: true
 });
@@ -34,7 +40,7 @@ testCases.push({
   description: 'Subject starts with, contains but does not start with',
   emailModel: testEmailModel,
   rules: [function(emailModel) {
-    return emailModel.getSubject().indexOf('bad bad abc') === 0;
+    return emailModel.getSubject().indexOf('bad bad ' + SUBJECT) === 0;
   }],
   expected: false
 });
@@ -43,10 +49,10 @@ testCases.push({
   description: 'Subject starts with, match, but has exception',
   emailModel: testEmailModel,
   rules: [function(emailModel) {
-    return emailModel.getSubject().indexOf('abc') === 0;
+    return emailModel.getSubject().indexOf(SUBJECT) === 0;
   }],
   exceptions: [function(emailModel) {
-    return emailModel.getFrom().email == 'me@domain.com';
+    return emailModel.getFrom().email == FROM_ADDRESS;
   }],
   expected: false
 });
@@ -56,7 +62,7 @@ testCases.push({
   description: 'checkFrom as rule',
   emailModel: testEmailModel,
   rules: [function(emailModel) {
-    return Checker.prototype.checkFrom(emailModel, 'me@domain.com');
+    return Checker.prototype.checkFrom(emailModel, FROM_ADDRESS);
   }],
   expected: true
 });
@@ -68,7 +74,7 @@ testCases.push({
     return emailModel.getSubject().indexOf('abc') === 0;
   }],
   exceptions: [function(emailModel) {
-    return Checker.prototype.checkFrom(emailModel, 'me@domain.com');
+    return Checker.prototype.checkFrom(emailModel, FROM_ADDRESS);
   }],
   expected: false
 });
@@ -77,7 +83,7 @@ testCases.push({
   description: 'checkSubjectStartsWith',
   emailModel: testEmailModel,
   rules: [function(emailModel) {
-    return Checker.prototype.checkSubjectStartsWith(emailModel, 'abc');
+    return Checker.prototype.checkSubjectStartsWith(emailModel, SUBJECT);
   }],
   expected: true
 });
@@ -86,7 +92,7 @@ testCases.push({
   description: 'checkSubjectStartsWith - no match',
   emailModel: testEmailModel,
   rules: [function(emailModel) {
-    return Checker.prototype.checkSubjectStartsWith(emailModel, 'no match abc');
+    return Checker.prototype.checkSubjectStartsWith(emailModel, 'no match ' + SUBJECT);
   }],
   expected: false
 });
@@ -109,6 +115,42 @@ testCases.push({
   expected: true
 });
 
+testCases.push({
+  description: 'checkToContains',
+  emailModel: testEmailModel,
+  rules: [function(emailModel) {
+    return Checker.prototype.checkToContains(emailModel, TO_ADDRESS);
+  }],
+  expected: true
+});
+
+testCases.push({
+  description: 'checkToContains - no match',
+  emailModel: testEmailModel,
+  rules: [function(emailModel) {
+    return Checker.prototype.checkToContains(emailModel, 'bad' + TO_ADDRESS);
+  }],
+  expected: false
+});
+
+testCases.push({
+  description: 'checkCcContains',
+  emailModel: testEmailModel,
+  rules: [function(emailModel) {
+    return Checker.prototype.checkCcContains(emailModel, CC_ADDRESS);
+  }],
+  expected: true
+});
+
+testCases.push({
+  description: 'checkCcContains - no match',
+  emailModel: testEmailModel,
+  rules: [function(emailModel) {
+    return Checker.prototype.checkCcContains(emailModel, 'bad' + CC_ADDRESS);
+  }],
+  expected: false
+});
+
 testCases.forEach(function(v) {
   var checker = new Checker();
   if (v.exceptions) {
@@ -123,5 +165,6 @@ testCases.forEach(function(v) {
     });
   }
 
-  assert.equal(checker.check(v.emailModel), v.expected);
+  var actual = checker.check(v.emailModel);
+  assert.equal(actual, v.expected, 'Expected: ' + v.expected + ' Got: ' + actual + ' ~ ' + v.description);
 });

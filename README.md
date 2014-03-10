@@ -8,6 +8,7 @@ NOTE: This is not intended to be an "out of the box" product.  Users MUST put th
 Special thanks to https://github.com/mscdex/node-imap for doing all the hard work :)
 
 TODO:
- - Currently only has a placeholder for a subject to filter on - the rules part needs to be done.
  - Comments.
  - Would like to build out a unit test for the listener class
+ - add package.json 
+ - write up a how-to

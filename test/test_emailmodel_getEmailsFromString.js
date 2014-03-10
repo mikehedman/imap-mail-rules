@@ -26,7 +26,6 @@ var
     var result;
 
     try {
-debugger;
       result = emailModel._getEmailsFromString(v.source);
     } catch (e) {
       console.log(makeMsg(v.what, 'JS Exception: ' + e.stack));

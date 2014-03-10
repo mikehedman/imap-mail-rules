@@ -9,13 +9,11 @@ try {
 } catch (e) {
   //just eat errors, this is optional
 }
-
 //can (should!) supply a custom config file to override the publicly visible file
 try {
-  checks = require('./custom_checks.js').custom_checks;
+  checks = require('./custom_checks').custom_checks;
 } catch (e) {
   //just eat errors, this is optional
 }
-
 var listener = new Listener(config, checks);
 listener.go();

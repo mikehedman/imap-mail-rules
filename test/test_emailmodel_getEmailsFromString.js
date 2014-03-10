@@ -5,18 +5,28 @@ var
   inspect = require('util').inspect;
 
 [
-  { source: '"Harry Potter" <harry@potter.com>',
+  { source: ['"Harry Potter" <harry@potter.com>'],
     expected: [{'name':'Harry Potter', 'email':'harry@potter.com'}],
     what: 'Quoted name'
   },
-  { source: 'Harry Potter <harry@potter.com>',
-    expected: [{'name':'Harry Potter', 'email':'harry@potter.com'}],
+  { source: ['Mary Potter <mary@potter.com>'],
+    expected: [{'name':'Mary Potter', 'email':'mary@potter.com'}],
     what: 'Unquoted name'
+  },
+  { source: ['harry@potter.com'],
+    expected: [{'name': undefined, 'email':'harry@potter.com'}],
+    what: 'No text name'
+  },
+  { source: ['harry@potter.com', 'mary@potter.com'],
+    expected: [{'name': undefined, 'email':'harry@potter.com'},
+               {'name': undefined, 'email':'mary@potter.com'}],
+    what: 'Multiple names'
   }
 ].forEach(function(v) {
     var result;
 
     try {
+debugger;
       result = emailModel._getEmailsFromString(v.source);
     } catch (e) {
       console.log(makeMsg(v.what, 'JS Exception: ' + e.stack));

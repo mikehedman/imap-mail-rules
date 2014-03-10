@@ -12,3 +12,5 @@ TODO:
  - Would like to build out a unit test for the listener class
  - add package.json 
  - write up a how-to
+ - move destination mailbox to config
+ - handle destination mailbox returned from checker

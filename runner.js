@@ -1,5 +1,5 @@
 var
-  Listener = require('./lib/Listener').Listener,
+  Listener = require('./lib/listener').Listener,
   config = require('./config').config,
   checks = require('./checks').checks;
 

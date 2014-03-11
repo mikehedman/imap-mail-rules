@@ -8,8 +8,10 @@ NOTE: This is not intended to be an "out of the box" product.  Users MUST put th
 Special thanks to https://github.com/mscdex/node-imap for doing all the hard work :)
 
 TODO:
- - Comments.
+ - Comments in the code.
  - Would like to build out a unit test for the listener class
  - write up a how-to
  - move destination mailbox to config
  - handle destination mailbox returned from checker
+ - Gracefully handle connection interruptions
+ - at startup, clean up any messages in the inbox that meet the filter

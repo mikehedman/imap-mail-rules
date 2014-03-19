@@ -7,13 +7,13 @@ var
 try {
   config = require('./custom_config.js').custom_config;
 } catch (e) {
-  //just eat errors, this is optional
+  //just eat errors, since using a custom_config file is optional
 }
-//can (should!) supply a custom config file to override the publicly visible file
+
 try {
   checks = require('./custom_checks').custom_checks;
 } catch (e) {
-  //just eat errors, this is optional
+  //just eat errors, since providing a custom_checks file is optional
 }
 var listener = new Listener(config, checks);
 listener.go();
